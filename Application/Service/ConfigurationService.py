@@ -1,5 +1,5 @@
 import json
-
+import os
 
 
 
@@ -15,7 +15,7 @@ class ConfigurationService() :
         self.ReadConfigurationFile()
     
     def ReadConfigurationFile(self) : 
-        with open('C:\\Users\\User98\\Desktop\\GitBrainsBlog\\Api\\Application\\Configurations\\Web.config.json', 'r') as configurationFile:
+        with open(os.getcwd() + '\Application\Configurations\Web.config.json', 'r') as configurationFile:
             self._configurationData = json.load(configurationFile)
 
     def GetSQLiteConnectionString(self) :
