@@ -19,7 +19,7 @@ class ConfigurationService() :
             self._configurationData = json.load(configurationFile)
 
     def GetSQLiteConnectionString(self) :
-        return self._configurationData["sqliteConnectionString"]
+        return 'sqlite:///' + os.path.join(os.getcwd(),'Infrastructure', 'SQLite', 'gtbrnsblg.db?check_same_thread=False')
 
     def GetFastApiTitle(self) : 
         return self._configurationData["fastApiTitle"]

@@ -1,5 +1,4 @@
 {
-    "sqliteConnectionString" : "sqlite:///C:\\Users\\User98\\Desktop\\GitBrainsBlog\\Api\\Infrastructure\\SQLite\\gtbrnsblg.db?check_same_thread=False",
     "fastApiTitle" : "Python",
     "host" : "0.0.0.0",
     "port" : 8000,

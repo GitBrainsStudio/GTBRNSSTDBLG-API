@@ -3,7 +3,7 @@ from Application.Middlewares.AlchemyItemNotFound import AlchemyItemNotFound
 from fastapi.applications import FastAPI
 from Application.Service.ConfigurationService import ConfigurationService
 from fastapi.middleware.cors import CORSMiddleware
-
+from fastapi.staticfiles import StaticFiles
 
 
 
@@ -24,7 +24,6 @@ class FastApiService() :
 
     def ActivateMiddlewares(self) : 
         self._fastApi.middleware('http')(AlchemyItemNotFound.OnException)
-        # self._fastApi.middleware('http')(self._tokenChecker.Check)
 
     def ActivateCORS(self) : 
         self._fastApi.add_middleware(
