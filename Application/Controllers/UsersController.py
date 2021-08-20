@@ -23,23 +23,20 @@ class UsersController() :
     _fastApiService:FastApiService
     _tokenService:TokenService
     _sessionService:SessionService
-    _tokenChecker:TokenChecker
 
     def __init__(
         self,
         fastApiService:FastApiService,
         tokenService:TokenService,
-        sessionService:SessionService,
-        tokenChecker:TokenChecker) -> None:
+        sessionService:SessionService) -> None:
         self._tokenService = tokenService
         self._sessionService = sessionService
-        self._tokenChecker = tokenChecker
         self._fastApiService = fastApiService
-        self._fastApiService._fastApi.add_api_route(path="/users", endpoint=self.GetAll, methods=["GET"], dependencies=[Depends(self._tokenChecker.Check)],)
-        self._fastApiService._fastApi.add_api_route(path="/users/{userId}", endpoint=self.GetById, methods=["GET"])
-        self._fastApiService._fastApi.add_api_route(path="/users/", endpoint=self.Create, methods=["POST"])
-        self._fastApiService._fastApi.add_api_route(path="/users/", endpoint=self.Update, methods=["PUT"])
-        self._fastApiService._fastApi.add_api_route(path="/users/{userId}", endpoint=self.Delete, methods=["DELETE"])
+        # self._fastApiService._fastApi.add_api_route(path="/users", endpoint=self.GetAll, methods=["GET"], dependencies=[Depends(self._tokenService.Check)])
+        # self._fastApiService._fastApi.add_api_route(path="/users/{userId}", endpoint=self.GetById, methods=["GET"])
+        # self._fastApiService._fastApi.add_api_route(path="/users/", endpoint=self.Create, methods=["POST"])
+        # self._fastApiService._fastApi.add_api_route(path="/users/", endpoint=self.Update, methods=["PUT"])
+        # self._fastApiService._fastApi.add_api_route(path="/users/{userId}", endpoint=self.Delete, methods=["DELETE"])
         self._fastApiService._fastApi.add_api_route(path="/users/authenticate", endpoint=self.Authenticate, methods=["POST"])
 
     def GetById(self, userId:str) : 
@@ -80,7 +77,7 @@ class UsersController() :
         return JSONResponse(status_code=200, content={"message": "Пользователь успешно удален"})
 
     def Authenticate(self, authenticateData:Authenticate) : 
-        user = self._sessionService.GetDBContext().query(User).filter(User.Email == authenticateData.Email).one() 
+        user = self._sessionService.GetDBContext().query(User).filter(User.Email == authenticateData.Email, User.Password == authenticateData.Password).one() 
 
         account = AccountDto()
         account.User = UserDto(user)

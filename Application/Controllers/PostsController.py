@@ -1,3 +1,4 @@
+from Application.Service.TokenService import TokenService
 from typing import List
 
 from sqlalchemy.orm.exc import NoResultFound
@@ -12,22 +13,27 @@ from datetime import datetime
 from fastapi.responses import JSONResponse
 from Domain.Entities.Post import Post
 from sqlalchemy import func
+from fastapi import Depends
+
 
 class PostsController() : 
 
     _sessionService:SessionService
     _fastApiService:FastApiService
+    _tokenService:TokenService
 
     def __init__(
         self,
         fastApiService:FastApiService,
-        sessionService:SessionService) -> None:
+        sessionService:SessionService,
+        tokenService:TokenService) -> None:
+        self._tokenService = tokenService
         self._fastApiService = fastApiService
         self._fastApiService._fastApi.add_api_route(path="/posts/", endpoint=self.GetAll, methods=["GET"])
         self._fastApiService._fastApi.add_api_route(path="/posts/{postId}", endpoint=self.GetById, methods=["GET"])
-        self._fastApiService._fastApi.add_api_route(path="/posts/", endpoint=self.Create, methods=["POST"])
-        self._fastApiService._fastApi.add_api_route(path="/posts/", endpoint=self.Update, methods=["PUT"])
-        self._fastApiService._fastApi.add_api_route(path="/posts/", endpoint=self.Delete, methods=["DELETE"])
+        self._fastApiService._fastApi.add_api_route(path="/posts/", endpoint=self.Create, methods=["POST"], dependencies=[Depends(self._tokenService.Check)])
+        self._fastApiService._fastApi.add_api_route(path="/posts/", endpoint=self.Update, methods=["PUT"], dependencies=[Depends(self._tokenService.Check)])
+        self._fastApiService._fastApi.add_api_route(path="/posts/", endpoint=self.Delete, methods=["DELETE"], dependencies=[Depends(self._tokenService.Check)])
         self._sessionService = sessionService
 
     def GetById(self, postId:str) : 

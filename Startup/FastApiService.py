@@ -11,14 +11,12 @@ from fastapi.staticfiles import StaticFiles
 
 class FastApiService() : 
 
-    _tokenChecker:TokenChecker
     _configurationService:ConfigurationService
     _fastApi:FastAPI
 
-    def __init__(self, configurationService:ConfigurationService, tokenChecker:TokenChecker) :
+    def __init__(self, configurationService:ConfigurationService) :
         self._configurationService = configurationService
         self._fastApi = FastAPI(title = self._configurationService.GetFastApiTitle())
-        self._tokenChecker = tokenChecker
         self.ActivateMiddlewares()
         self.ActivateCORS()
 

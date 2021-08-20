@@ -1,3 +1,4 @@
+from Application.Service.TokenService import TokenService
 from Infrastructure.Services.SessionService import SessionService
 from Startup.FastApiService import FastApiService
 import uuid
@@ -7,23 +8,26 @@ from Domain.Entities.Project import Project
 from Application.Dtos.Projects.ProjectCreate import ProjectCreate
 from Application.Dtos.Projects.ProjectDelete import ProjectDelete
 from Application.Dtos.Projects.ProjectUpdate import ProjectUpdate
-
+from fastapi import Depends
 
 class ProjectController() : 
 
     _sessionService:SessionService
     _fastApiService:FastApiService
+    _tokenService:TokenService
 
     def __init__(
         self,
         fastApiService:FastApiService,
-        sessionService:SessionService) -> None:
+        sessionService:SessionService,
+        tokenService:TokenService) -> None:
+        self._tokenService = tokenService
         self._fastApiService = fastApiService
         self._fastApiService._fastApi.add_api_route(path="/projects", endpoint=self.GetAll, methods=["GET"])
-        self._fastApiService._fastApi.add_api_route(path="/projects/{projectId}", endpoint=self.GetById, methods=["GET"])
-        self._fastApiService._fastApi.add_api_route(path="/projects/", endpoint=self.Create, methods=["POST"])
-        self._fastApiService._fastApi.add_api_route(path="/projects/", endpoint=self.Update, methods=["PUT"])
-        self._fastApiService._fastApi.add_api_route(path="/projects/{projectId}", endpoint=self.Delete, methods=["DELETE"])
+        # self._fastApiService._fastApi.add_api_route(path="/projects/{projectId}", endpoint=self.GetById, methods=["GET"])
+        # self._fastApiService._fastApi.add_api_route(path="/projects/", endpoint=self.Create, methods=["POST"])
+        # self._fastApiService._fastApi.add_api_route(path="/projects/", endpoint=self.Update, methods=["PUT"])
+        # self._fastApiService._fastApi.add_api_route(path="/projects/{projectId}", endpoint=self.Delete, methods=["DELETE"])
         self._sessionService = sessionService
 
     def GetById(self, projectId:str) : 

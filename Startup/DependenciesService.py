@@ -22,6 +22,7 @@ class DependenciesService() :
     _sessionService:SessionService
     _tokenService:TokenService
     _tokenChecker:TokenChecker
+    
 
     def __init__(self) :
         self._fastApiService = None
@@ -42,7 +43,6 @@ class DependenciesService() :
         if not self._fastApiService : 
             self._fastApiService = FastApiService(
                 self.GetConfigurationService(),
-                self.GetTokenChecker()
             )
         return self._fastApiService
 
@@ -71,20 +71,22 @@ class DependenciesService() :
             self.GetFastApiService(),
             self.GetTokenService(),
             self.GetSessionService(),
-            self.GetTokenChecker()
         )
         PostsController(
             self.GetFastApiService(),
-            self.GetSessionService()
+            self.GetSessionService(),
+            self.GetTokenService()
         )
 
         TagController(
             self.GetFastApiService(),
-            self.GetSessionService()
+            self.GetSessionService(),
+            self.GetTokenService()
         )
         ProjectController(
             self.GetFastApiService(),
-            self.GetSessionService()
+            self.GetSessionService(),
+            self.GetTokenService()
         )
 
     def GetTokenChecker(self) : 
