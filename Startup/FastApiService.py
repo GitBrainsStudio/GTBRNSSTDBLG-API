@@ -1,13 +1,7 @@
-from Application.Middlewares.TokenChecker import TokenChecker
 from Application.Middlewares.AlchemyItemNotFound import AlchemyItemNotFound
 from fastapi.applications import FastAPI
 from Application.Service.ConfigurationService import ConfigurationService
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.staticfiles import StaticFiles
-
-
-
-
 
 class FastApiService() : 
 

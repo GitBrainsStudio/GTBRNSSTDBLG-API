@@ -1,4 +1,3 @@
-from Application.Middlewares.TokenChecker import TokenChecker
 from Application.Service.TokenService import TokenService
 from Application.Controllers.UsersController import UsersController
 from Infrastructure.Services.SessionService import SessionService
@@ -13,7 +12,6 @@ from Application.Controllers.TagController import TagController
 
 
 
-
 class DependenciesService() : 
 
     _fastApiService:FastApiService
@@ -21,7 +19,6 @@ class DependenciesService() :
     _uvicornService:UvicornService
     _sessionService:SessionService
     _tokenService:TokenService
-    _tokenChecker:TokenChecker
     
 
     def __init__(self) :
@@ -88,10 +85,3 @@ class DependenciesService() :
             self.GetSessionService(),
             self.GetTokenService()
         )
-
-    def GetTokenChecker(self) : 
-        if not self._tokenChecker : 
-            self._tokenChecker = TokenChecker(
-                self.GetConfigurationService()
-            )
-        return self._tokenChecker

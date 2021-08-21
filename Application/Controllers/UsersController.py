@@ -1,5 +1,4 @@
 from sqlalchemy.sql.expression import false
-from Application.Middlewares.TokenChecker import TokenChecker
 from Infrastructure.Services.SessionService import SessionService
 from Application.Service.TokenService import TokenService
 from Application.Dtos.Users.UserUpdate import UserUpdate
@@ -55,7 +54,7 @@ class UsersController() :
         
         users = self._sessionService.GetDBContext().query(User).filter(User.Email == userCreate.Email).all()
 
-        if len(users) is not 0 : 
+        if len(users) != 0 : 
             return JSONResponse(status_code=400, content={"message": "Пользователь с указанным почтовым адресом уже существует в системе", "email" : userCreate.Email})
 
         user:User = User(
