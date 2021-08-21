@@ -1,9 +1,6 @@
 # Virtual envinronment
 venv/
 
-# Requirements.txt
-requirements.txt
-
 # SQLite
 *.sqlite3
 *.db
