@@ -1,7 +1,8 @@
+from Domain.Entities.Image import Image
 from Domain.Entities.Tag import Tag
 from typing import List
 from sqlalchemy.orm import relationship
-from Domain.Entities.Base import Base, post_tag
+from Domain.Entities.Base import Base, post_tag, post_image
 from sqlalchemy import Column, String
 
 class Post(Base) : 
@@ -17,6 +18,11 @@ class Post(Base) :
         "Tag",
         secondary=post_tag,
         lazy="joined")
+    
+    Images = relationship(
+        "Image",
+        secondary=post_image,
+        lazy="joined")
 
     def __init__(
         self,
@@ -25,7 +31,8 @@ class Post(Base) :
         content:str,
         createDate:str,
         userId:str,
-        tags:List[Tag]
+        tags:List[Tag],
+        images:List[Image]
         ) -> None :
         self.Id = id
         self.Title = title
@@ -33,6 +40,7 @@ class Post(Base) :
         self.CreateDate = createDate
         self.UserId = userId
         self.Tags = tags
+        self.Images = images
 
     def Update(self, title:str, content:str, tags:List[Tag]) : 
         self.Title = title

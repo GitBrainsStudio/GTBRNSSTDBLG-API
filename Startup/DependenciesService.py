@@ -1,3 +1,5 @@
+from Application.Service.FileNamingService import FileNamingService
+from Application.Controllers.ImagesController import ImagesController
 from Application.Service.TokenService import TokenService
 from Application.Controllers.UsersController import UsersController
 from Infrastructure.Services.SessionService import SessionService
@@ -19,8 +21,8 @@ class DependenciesService() :
     _uvicornService:UvicornService
     _sessionService:SessionService
     _tokenService:TokenService
+    _fileNamingService:FileNamingService
     
-
     def __init__(self) :
         self._fastApiService = None
         self._configurationService = None
@@ -30,6 +32,7 @@ class DependenciesService() :
         self._postRepository = None
         self._tokenService = None
         self._tokenChecker = None
+        self._fileNamingService = None
 
     def GetConfigurationService(self) -> ConfigurationService : 
         if not self._configurationService : 
@@ -62,6 +65,11 @@ class DependenciesService() :
         if not self._tokenService : 
             self._tokenService = TokenService(self.GetConfigurationService())
         return self._tokenService
+    
+    def GetFileNamingService(self) -> FileNamingService : 
+        if not self._fileNamingService : 
+            self._fileNamingService = FileNamingService()
+        return self._fileNamingService
 
     def RegisterControllers(self) : 
         UsersController(
@@ -84,4 +92,11 @@ class DependenciesService() :
             self.GetFastApiService(),
             self.GetSessionService(),
             self.GetTokenService()
+        )
+        ImagesController(
+            self.GetFastApiService(),
+            self.GetSessionService(),
+            self.GetTokenService(),
+            self.GetFileNamingService(),
+            self.GetConfigurationService()
         )

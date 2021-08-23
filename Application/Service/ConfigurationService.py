@@ -35,5 +35,3 @@ class ConfigurationService() :
 
     def GetTokenSecretKey(self) : 
         return self._configurationData["tokenSecretKey"]
-
-        

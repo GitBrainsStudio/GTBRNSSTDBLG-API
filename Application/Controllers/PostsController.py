@@ -1,6 +1,7 @@
+from Domain.Entities.Image import Image
+from Application.Dtos.Images.ImageUpload import ImageUpload
 from Application.Service.TokenService import TokenService
 from typing import List
-
 from sqlalchemy.orm.exc import NoResultFound
 from Domain.Entities.Tag import Tag
 from Infrastructure.Services.SessionService import SessionService
@@ -14,6 +15,8 @@ from fastapi.responses import JSONResponse
 from Domain.Entities.Post import Post
 from sqlalchemy import func
 from fastapi import Depends
+import base64
+
 
 
 class PostsController() : 
@@ -84,13 +87,28 @@ class PostsController() :
                 self._sessionService.GetDBContext().add(tag)
                 postTags.append(tag)
         
+        postImages:List[Image] = []
+        for imageTitle in postCreate.ImagesTitles : 
+
+            image:Image = Image(
+                str(uuid.uuid4()),
+                imageTitle,
+                datetime.now().strftime("%m/%d/%Y"),
+                '17f1c408-28bd-4bde-90b3-a33279a8ba9d'
+            )
+
+            self._sessionService.GetDBContext().add(image)
+            postImages.append(image)
+
+    
         post:Post = Post(
             str(uuid.uuid4()),
             postCreate.Title,
             postCreate.Content,
             datetime.now().strftime("%m/%d/%Y"),
             '17f1c408-28bd-4bde-90b3-a33279a8ba9d',
-            postTags
+            postTags,
+            postImages
         )
 
         self._sessionService.GetDBContext().add(post)

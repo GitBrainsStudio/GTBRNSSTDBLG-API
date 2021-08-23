@@ -1,7 +1,9 @@
+import os
 from Application.Middlewares.AlchemyItemNotFound import AlchemyItemNotFound
 from fastapi.applications import FastAPI
 from Application.Service.ConfigurationService import ConfigurationService
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 
 class FastApiService() : 
 
@@ -13,6 +15,7 @@ class FastApiService() :
         self._fastApi = FastAPI(title = self._configurationService.GetFastApiTitle())
         self.ActivateMiddlewares()
         self.ActivateCORS()
+        self.ActivateStaticFiles()
 
     def ActivateMiddlewares(self) : 
         self._fastApi.middleware('http')(AlchemyItemNotFound.OnException)
@@ -25,3 +28,8 @@ class FastApiService() :
         allow_methods=["*"],
         allow_headers=["*"],
     )
+
+    def ActivateStaticFiles(self) : 
+        self._fastApi.mount("/files/images", StaticFiles(directory=os.path.join(os.getcwd(),'Static', 'Images'), html = True))
+        
+

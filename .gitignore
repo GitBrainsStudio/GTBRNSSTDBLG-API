@@ -1,3 +1,10 @@
+# Images
+*.jpg
+*.jpeg
+
+# Static files
+Static/
+
 # Virtual envinronment
 venv/
 
