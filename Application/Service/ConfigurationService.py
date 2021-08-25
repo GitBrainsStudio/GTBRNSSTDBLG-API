@@ -15,7 +15,7 @@ class ConfigurationService() :
         self.ReadConfigurationFile()
     
     def ReadConfigurationFile(self) : 
-        with open(os.getcwd() + '\Application\Configurations\Web.config.json', 'r') as configurationFile:
+        with open(os.path.join(os.getcwd(),'Application', 'Configurations', 'Web.config.json'), 'r') as configurationFile:
             self._configurationData = json.load(configurationFile)
 
     def GetSQLiteConnectionString(self) :
