@@ -8,6 +8,7 @@ from fastapi import HTTPException
 
 class TokenService() : 
 
+    _requestUserId:str
     _configurationService:ConfigurationService
 
     def __init__(self, configurationService:ConfigurationService) -> None:

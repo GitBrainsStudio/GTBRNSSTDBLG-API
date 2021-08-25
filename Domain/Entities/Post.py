@@ -42,8 +42,9 @@ class Post(Base) :
         self.Tags = tags
         self.Images = images
 
-    def Update(self, title:str, content:str, tags:List[Tag]) : 
+    def Update(self, title:str, content:str, tags:List[Tag], images:List[Image]) : 
         self.Title = title
         self.Content = content
         self.Tags = tags
+        self.Images = images
 

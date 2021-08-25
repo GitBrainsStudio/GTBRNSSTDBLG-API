@@ -3,7 +3,7 @@
 *.jpeg
 
 # Static files
-Static/
+Static/Images/*
 
 # Virtual envinronment
 venv/

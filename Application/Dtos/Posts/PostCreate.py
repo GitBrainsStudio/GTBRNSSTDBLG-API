@@ -13,4 +13,5 @@ class PostCreate(BaseModel) :
     Title:str
     Content:str
     TagsTitles:List[str]
-    ImagesTitles:List[str]
+    ImagesIds:List[str]
+    

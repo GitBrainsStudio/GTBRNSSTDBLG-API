@@ -64,9 +64,26 @@ class PostsController() :
                 self._sessionService.GetDBContext().add(tag)
                 postTags.append(tag)
 
+        postImages:List[Image] = post.Images
+        for imageId in postUpdate.ImagesIds : 
 
-        post.Update(postUpdate.Title, postUpdate.Content, postTags)
-        self._sessionService.GetDBContext().commit()
+           findImage = next((x for x in post.Images if x.Id == imageId), None)
+           if (findImage is None) : 
+               postImages.append(self._sessionService.GetDBContext().query(Image).filter(Image.Id == imageId).one())
+
+        for postImage in postImages[:] : 
+            findImage = next((x for x in postUpdate.ImagesIds if x == postImage.Id), None)
+            if (findImage is None) : 
+                postImages.remove(postImage)
+
+
+        post.Update(postUpdate.Title, postUpdate.Content, postTags, postImages)
+
+        try :
+            self._sessionService.GetDBContext().commit()
+        except : 
+            self._sessionService.GetDBContext().rollback()
+
         return JSONResponse(status_code=200, content={"message": "Пост успешно обновлен", "id" : post.Id})
 
     def Create(self, postCreate:PostCreate) : 
@@ -88,17 +105,8 @@ class PostsController() :
                 postTags.append(tag)
         
         postImages:List[Image] = []
-        for imageTitle in postCreate.ImagesTitles : 
-
-            image:Image = Image(
-                str(uuid.uuid4()),
-                imageTitle,
-                datetime.now().strftime("%m/%d/%Y"),
-                '17f1c408-28bd-4bde-90b3-a33279a8ba9d'
-            )
-
-            self._sessionService.GetDBContext().add(image)
-            postImages.append(image)
+        for imageId in postCreate.ImagesIds : 
+            postImages.append(self._sessionService.GetDBContext().query(Image).filter(Image.Id == imageId).one())
 
     
         post:Post = Post(
