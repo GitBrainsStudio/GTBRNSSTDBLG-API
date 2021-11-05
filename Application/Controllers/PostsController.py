@@ -1,6 +1,7 @@
+from Domain.Entities.Image import Image
+from Application.Dtos.Images.ImageUpload import ImageUpload
 from Application.Service.TokenService import TokenService
 from typing import List
-
 from sqlalchemy.orm.exc import NoResultFound
 from Domain.Entities.Tag import Tag
 from Infrastructure.Services.SessionService import SessionService
@@ -14,6 +15,8 @@ from fastapi.responses import JSONResponse
 from Domain.Entities.Post import Post
 from sqlalchemy import func
 from fastapi import Depends
+import base64
+
 
 
 class PostsController() : 
@@ -61,9 +64,26 @@ class PostsController() :
                 self._sessionService.GetDBContext().add(tag)
                 postTags.append(tag)
 
+        postImages:List[Image] = post.Images
+        for imageId in postUpdate.ImagesIds : 
 
-        post.Update(postUpdate.Title, postUpdate.Content, postTags)
-        self._sessionService.GetDBContext().commit()
+           findImage = next((x for x in post.Images if x.Id == imageId), None)
+           if (findImage is None) : 
+               postImages.append(self._sessionService.GetDBContext().query(Image).filter(Image.Id == imageId).one())
+
+        for postImage in postImages[:] : 
+            findImage = next((x for x in postUpdate.ImagesIds if x == postImage.Id), None)
+            if (findImage is None) : 
+                postImages.remove(postImage)
+
+
+        post.Update(postUpdate.Title, postUpdate.Content, postTags, postImages)
+
+        try :
+            self._sessionService.GetDBContext().commit()
+        except : 
+            self._sessionService.GetDBContext().rollback()
+
         return JSONResponse(status_code=200, content={"message": "Пост успешно обновлен", "id" : post.Id})
 
     def Create(self, postCreate:PostCreate) : 
@@ -84,13 +104,19 @@ class PostsController() :
                 self._sessionService.GetDBContext().add(tag)
                 postTags.append(tag)
         
+        postImages:List[Image] = []
+        for imageId in postCreate.ImagesIds : 
+            postImages.append(self._sessionService.GetDBContext().query(Image).filter(Image.Id == imageId).one())
+
+    
         post:Post = Post(
             str(uuid.uuid4()),
             postCreate.Title,
             postCreate.Content,
             datetime.now().strftime("%m/%d/%Y"),
             '17f1c408-28bd-4bde-90b3-a33279a8ba9d',
-            postTags
+            postTags,
+            postImages
         )
 
         self._sessionService.GetDBContext().add(post)

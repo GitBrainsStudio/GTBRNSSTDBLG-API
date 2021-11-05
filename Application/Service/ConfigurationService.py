@@ -15,7 +15,9 @@ class ConfigurationService() :
         self.ReadConfigurationFile()
     
     def ReadConfigurationFile(self) : 
-        with open(os.getcwd() + '\Application\Configurations\Web.config.json', 'r') as configurationFile:
+        x = os.getcwd()
+
+        with open(os.path.join(os.getcwd(),'Application', 'Configurations', 'Web.config.json'), 'r') as configurationFile:
             self._configurationData = json.load(configurationFile)
 
     def GetSQLiteConnectionString(self) :
@@ -35,5 +37,3 @@ class ConfigurationService() :
 
     def GetTokenSecretKey(self) : 
         return self._configurationData["tokenSecretKey"]
-
-        
